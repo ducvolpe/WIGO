@@ -1,21 +1,5 @@
 {
   "dependencies": {
-    "ai.natml.hub": {
-      "version": "1.0.12",
-      "depth": 1,
-      "source": "registry",
-      "dependencies": {},
-      "url": "https://registry.npmjs.com"
-    },
-    "ai.natml.natdevice": {
-      "version": "https://github.com/natmlx/NatDevice.git",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {
-        "ai.natml.hub": "1.0.12"
-      },
-      "hash": "f2dcc4300eeb8bd79f08f71a544a91c1a0254166"
-    },
     "com.unity.2d.animation": {
       "version": "7.0.3",
       "depth": 1,

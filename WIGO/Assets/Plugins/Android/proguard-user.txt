@@ -1,3 +1,0 @@
--keep public class com.deadmosquitogames.gmaps.** { *; }
--keep public class com.google.android.gms.maps.** { *; }
--keep public class com.google.maps.** { *; }

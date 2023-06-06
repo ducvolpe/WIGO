@@ -1,10 +1,8 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
-using NatML.Devices;
-using NatML.Devices.Outputs;
-using NatSuite.Recorders;
-using NatSuite.Recorders.Clocks;
+//using NatML.Devices;
+//using NatML.Devices.Outputs;
 using System.Threading.Tasks;
 using System.IO;
 using WIGO.Core;
@@ -23,9 +21,8 @@ namespace WIGO.Userinterface
         [SerializeField] RecordUIButton _recordButton;
         [SerializeField] WindowAnimator _animator;
 
-        CameraDevice _currentCamera;
-        AudioDevice _currentMicrophone;
-        MP4Recorder _recorder;
+        //CameraDevice _currentCamera;
+        //AudioDevice _currentMicrophone;
         Texture2D _streamingTexture;
         Coroutine _recordCoroutine;
         Color32[] _committedBytes;
@@ -44,18 +41,18 @@ namespace WIGO.Userinterface
         {
             _animator.OnOpen();
 #if UNITY_ANDROID && !UNITY_EDITOR
-            CheckPermissionsAndroid();
+            //CheckPermissionsAndroid();
 #elif UNITY_IOS
-            StartCoroutine(CheckPermissionsIOS());
+            //StartCoroutine(CheckPermissionsIOS());
 #else
-            SetupNatDevice();
+            //SetupNatDevice();
 #endif
         }
 
         public override void OnReopen(WindowId previous, UIWindowModel cachedModel)
         {
             _animator.OnReopen();
-            SetupNatDevice();
+            //SetupNatDevice();
         }
 
         public void Setup(bool response)
@@ -86,7 +83,7 @@ namespace WIGO.Userinterface
         IEnumerator DelayStartRecord()
         {
             yield return new WaitForSeconds(0.6f);
-            OnStartRecordVideo();
+            //OnStartRecordVideo();
             _recordCoroutine = null;
         }
 
@@ -111,206 +108,206 @@ namespace WIGO.Userinterface
             }
             else
             {
-                ClearTexture();
+                //ClearTexture();
             }
 
             ServiceLocator.Get<UIManager>().SwitchTo(WindowId.FEED_SCREEN);
         }
 
-        public async void OnSwitchCamera()
-        {
-            _isFrontFacing = !_isFrontFacing;
-            ClearTexture();
-            await SetupNatCamera();
-        }
+        //public async void OnSwitchCamera()
+        //{
+        //    _isFrontFacing = !_isFrontFacing;
+        //    ClearTexture();
+        //    await SetupNatCamera();
+        //}
 
-        async void SetupNatDevice()
-        {
-            _isFrontFacing = true;
-            await SetupNatCamera();
+        //async void SetupNatDevice()
+        //{
+        //    _isFrontFacing = true;
+        //    await SetupNatCamera();
 
-            var queryMic = new MediaDeviceQuery(MediaDeviceCriteria.AudioDevice);
-            _currentMicrophone = queryMic.current as AudioDevice;
+        //    var queryMic = new MediaDeviceQuery(MediaDeviceCriteria.AudioDevice);
+        //    _currentMicrophone = queryMic.current as AudioDevice;
 
-            if (_currentMicrophone == null)
-            {
-                Debug.LogError("Current mic is null");
-            }
-        }
+        //    if (_currentMicrophone == null)
+        //    {
+        //        Debug.LogError("Current mic is null");
+        //    }
+        //}
 
-        async Task SetupNatCamera()
-        {
-#if UNITY_EDITOR
-            var camFilter = MediaDeviceCriteria.CameraDevice;
-#elif UNITY_IOS || UNITY_ANDROID
-            var camFilter = _isFrontFacing ? MediaDeviceCriteria.FrontCamera : MediaDeviceCriteria.CameraDevice;
-#endif
-            var query = new MediaDeviceQuery(camFilter);
-            _currentCamera = query.current as CameraDevice;
+//        async Task SetupNatCamera()
+//        {
+//#if UNITY_EDITOR
+//            var camFilter = MediaDeviceCriteria.CameraDevice;
+//#elif UNITY_IOS || UNITY_ANDROID
+//            var camFilter = _isFrontFacing ? MediaDeviceCriteria.FrontCamera : MediaDeviceCriteria.CameraDevice;
+//#endif
+//            var query = new MediaDeviceQuery(camFilter);
+//            _currentCamera = query.current as CameraDevice;
 
-            if (_currentCamera == null)
-            {
-                Debug.LogError("Current camera is null");
-                return;
-            }
+//            if (_currentCamera == null)
+//            {
+//                Debug.LogError("Current camera is null");
+//                return;
+//            }
 
-            _view.SetActiveLoader(true);
-            SetCameraQuality();
+//            _view.SetActiveLoader(true);
+//            SetCameraQuality();
 
-            var textureOutput = new TextureOutput();
-            _currentCamera.StartRunning(textureOutput);
+//            var textureOutput = new TextureOutput();
+//            _currentCamera.StartRunning(textureOutput);
 
-            _streamingTexture = await textureOutput;
-            SetTexture();
-            _view.SetActiveLoader(false);
-        }
+//            _streamingTexture = await textureOutput;
+//            SetTexture();
+//            _view.SetActiveLoader(false);
+//        }
 
-        void SetCameraQuality()
-        {
-            var resolution = _currentCamera.previewResolution;
-            Debug.LogFormat("Default resolution: {0} x {1}", resolution.width, resolution.height);
-            float aspect = (float)resolution.width / resolution.height;
-            int width = Mathf.Min(resolution.width, QUALITY);
-            int height = Mathf.FloorToInt(width / aspect);
-            _currentCamera.previewResolution = (width, height);
-        }
+//        void SetCameraQuality()
+//        {
+//            var resolution = _currentCamera.previewResolution;
+//            Debug.LogFormat("Default resolution: {0} x {1}", resolution.width, resolution.height);
+//            float aspect = (float)resolution.width / resolution.height;
+//            int width = Mathf.Min(resolution.width, QUALITY);
+//            int height = Mathf.FloorToInt(width / aspect);
+//            _currentCamera.previewResolution = (width, height);
+//        }
 
-        void SetTexture()
-        {
-            float aspect = (float)_streamingTexture.width / _streamingTexture.height;
-            float cardHeight = _camImage.rectTransform.rect.width / aspect;
-            _camImage.rectTransform.sizeDelta = new Vector2(_camImage.rectTransform.sizeDelta.x, cardHeight);
-            _view.AdaptMaskBounds(cardHeight);
-            _camImage.texture = _streamingTexture;
-            UIGameColors.SetTransparent(_camImage, 1f);
-        }
+//        void SetTexture()
+//        {
+//            float aspect = (float)_streamingTexture.width / _streamingTexture.height;
+//            float cardHeight = _camImage.rectTransform.rect.width / aspect;
+//            _camImage.rectTransform.sizeDelta = new Vector2(_camImage.rectTransform.sizeDelta.x, cardHeight);
+//            _view.AdaptMaskBounds(cardHeight);
+//            _camImage.texture = _streamingTexture;
+//            UIGameColors.SetTransparent(_camImage, 1f);
+//        }
 
-        void ClearTexture()
-        {
-            _currentCamera.StopRunning();
-            Destroy(_streamingTexture);
-            _camImage.texture = null;
-            UIGameColors.SetTransparent(_camImage, 0.05f);
-            _currentCamera = null;
-        }
+//        void ClearTexture()
+//        {
+//            _currentCamera.StopRunning();
+//            Destroy(_streamingTexture);
+//            _camImage.texture = null;
+//            UIGameColors.SetTransparent(_camImage, 0.05f);
+//            _currentCamera = null;
+//        }
 
-        async void OnStartRecordVideo()
-        {
-            _view.SetActiveHeader(false);
+//        async void OnStartRecordVideo()
+//        {
+//            _view.SetActiveHeader(false);
 
-            _recording = true;
-            _recorder = new MP4Recorder(_streamingTexture.width, _streamingTexture.height, FPS, 
-                _currentMicrophone.sampleRate, _currentMicrophone.channelCount);
-            //_recordButton.StartRecordMode();
-            _framesCounter = 0;
-            _recorderedFrames = 0;
-            _recordTimer = 0f;
-            Application.targetFrameRate = FPS;
+//            _recording = true;
+//            _recorder = new MP4Recorder(_streamingTexture.width, _streamingTexture.height, FPS, 
+//                _currentMicrophone.sampleRate, _currentMicrophone.channelCount);
+//            //_recordButton.StartRecordMode();
+//            _framesCounter = 0;
+//            _recorderedFrames = 0;
+//            _recordTimer = 0f;
+//            Application.targetFrameRate = FPS;
 
-            await Record();
-            FinishWriting();
-        }
+//            await Record();
+//            FinishWriting();
+//        }
 
-        async void FinishWriting()
-        {
-            var path = await StopRecordingProcess();
+//        async void FinishWriting()
+//        {
+//            var path = await StopRecordingProcess();
 
-            if (string.IsNullOrEmpty(path))
-            {
-                return;
-            }
+//            if (string.IsNullOrEmpty(path))
+//            {
+//                return;
+//            }
 
-            if (_closing)
-            {
-                if (File.Exists(path))
-                    File.Delete(path);
+//            if (_closing)
+//            {
+//                if (File.Exists(path))
+//                    File.Delete(path);
 
-                ClearTexture();
-                Application.targetFrameRate = 60;
-                return;
-            }
+//                ClearTexture();
+//                Application.targetFrameRate = 60;
+//                return;
+//            }
 
-            ClearTexture();
-            Application.targetFrameRate = 60;
-            ServiceLocator.Get<UIManager>().Open<VideoPreviewWindow>(WindowId.VIDEO_PREVIEW_SCREEN, 
-                (window) => window.Setup(path, new Vector2Int(_streamingTexture.width, _streamingTexture.height), _isResponse));
-        }
+//            ClearTexture();
+//            Application.targetFrameRate = 60;
+//            ServiceLocator.Get<UIManager>().Open<VideoPreviewWindow>(WindowId.VIDEO_PREVIEW_SCREEN, 
+//                (window) => window.Setup(path, new Vector2Int(_streamingTexture.width, _streamingTexture.height), _isResponse));
+//        }
 
-        async Task<string> StopRecordingProcess()
-        {
-            _recording = false;
-            _recordButton.StopRecordMode();
-            _currentMicrophone?.StopRunning();
-            _view.SetActiveHeader(true, false);
+//        async Task<string> StopRecordingProcess()
+//        {
+//            _recording = false;
+//            _recordButton.StopRecordMode();
+//            _currentMicrophone?.StopRunning();
+//            _view.SetActiveHeader(true, false);
 
-            var path = await _recorder.FinishWriting();
-            Debug.LogFormat("Record complete: {0}", path);
-            return _recordTimer < 0.8f ? null : path;
-        }
+//            var path = await _recorder.FinishWriting();
+//            Debug.LogFormat("Record complete: {0}", path);
+//            return _recordTimer < 0.8f ? null : path;
+//        }
 
-        void OnSaveFile(string path)
-        {
-            var filename = Path.GetFileName(path);
-#if UNITY_EDITOR || UNITY_STANDALONE
-            var newPath = Environment.GetFolderPath(Environment.SpecialFolder.MyVideos);
-            newPath = Path.Combine(newPath, filename);
-            File.Copy(path, newPath, true);
-            if (File.Exists(path))
-                File.Delete(path);
+//        void OnSaveFile(string path)
+//        {
+//            var filename = Path.GetFileName(path);
+//#if UNITY_EDITOR || UNITY_STANDALONE
+//            var newPath = Environment.GetFolderPath(Environment.SpecialFolder.MyVideos);
+//            newPath = Path.Combine(newPath, filename);
+//            File.Copy(path, newPath, true);
+//            if (File.Exists(path))
+//                File.Delete(path);
 
-#elif UNITY_ANDROID || UNITY_IOS
-            NativeGallery.SaveVideoToGallery(path, "WIGO", filename, (successs, newPath) =>
-            {
-                if (successs)
-                {
-                    if (File.Exists(path))
-                        File.Delete(path);
-                }
-            });
-#endif
-        }
+//#elif UNITY_ANDROID || UNITY_IOS
+//            NativeGallery.SaveVideoToGallery(path, "WIGO", filename, (successs, newPath) =>
+//            {
+//                if (successs)
+//                {
+//                    if (File.Exists(path))
+//                        File.Delete(path);
+//                }
+//            });
+//#endif
+//        }
 
-        async Task Record()
-        {
-            var clock = new RealtimeClock();
-            _currentMicrophone.StartRunning(audioBuffer => _recorder.CommitSamples(audioBuffer.sampleBuffer.ToArray(), clock.timestamp));
-            _recordButton.SetTimeText(GameConsts.RECORD_VIDEO_SECONDS);
+//        async Task Record()
+//        {
+//            var clock = new RealtimeClock();
+//            _currentMicrophone.StartRunning(audioBuffer => _recorder.CommitSamples(audioBuffer.sampleBuffer.ToArray(), clock.timestamp));
+//            _recordButton.SetTimeText(GameConsts.RECORD_VIDEO_SECONDS);
 
-            await Task.Run(() =>
-            {
-                while (_recording)
-                {
-                    if (_recorderedFrames < _framesCounter)
-                    {
-                        _recorder.CommitFrame(_committedBytes, clock.timestamp);
-                        _recorderedFrames = _framesCounter;
-                    }
-                }
-            });
-        }
+//            await Task.Run(() =>
+//            {
+//                while (_recording)
+//                {
+//                    if (_recorderedFrames < _framesCounter)
+//                    {
+//                        _recorder.CommitFrame(_committedBytes, clock.timestamp);
+//                        _recorderedFrames = _framesCounter;
+//                    }
+//                }
+//            });
+//        }
 
-        private void Update()
-        {
-            if (_recording)
-            {
-                if (_streamingTexture != null)
-                {
-                    _committedBytes = _streamingTexture.GetPixels32();
-                }
+//        private void Update()
+//        {
+//            if (_recording)
+//            {
+//                if (_streamingTexture != null)
+//                {
+//                    _committedBytes = _streamingTexture.GetPixels32();
+//                }
 
-                _framesCounter++;
-                _recordTimer += Time.deltaTime;
-                int seconds = Mathf.CeilToInt(GameConsts.RECORD_VIDEO_SECONDS - _recordTimer);
-                float progress = _recordTimer / GameConsts.RECORD_VIDEO_SECONDS;
-                _recordButton.SetTimeText(seconds);
-                _recordButton.SetProgress(progress);
+//                _framesCounter++;
+//                _recordTimer += Time.deltaTime;
+//                int seconds = Mathf.CeilToInt(GameConsts.RECORD_VIDEO_SECONDS - _recordTimer);
+//                float progress = _recordTimer / GameConsts.RECORD_VIDEO_SECONDS;
+//                _recordButton.SetTimeText(seconds);
+//                _recordButton.SetProgress(progress);
 
-                if (_recordTimer >= GameConsts.RECORD_VIDEO_SECONDS)
-                {
-                    _recording = false;
-                }
-            }
-        }
+//                if (_recordTimer >= GameConsts.RECORD_VIDEO_SECONDS)
+//                {
+//                    _recording = false;
+//                }
+//            }
+//        }
 
         #region PERMISSIONS
 #if UNITY_ANDROID && !UNITY_EDITOR
