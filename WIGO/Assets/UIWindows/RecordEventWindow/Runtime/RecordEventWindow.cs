@@ -315,7 +315,7 @@ namespace WIGO.Userinterface
         {
             if (Permission.HasUserAuthorizedPermission(Permission.Camera) && Permission.HasUserAuthorizedPermission(Permission.Microphone))
             {
-                SetupNatDevice();
+                //SetupNatDevice();
                 return;
             }
 
@@ -346,7 +346,7 @@ namespace WIGO.Userinterface
             callbacks.PermissionGranted += (name) =>
             {
                 Debug.Log($"<color=green>{permissionName} Granted</color>");
-                SetupNatDevice();
+                //SetupNatDevice();
             };
             Permission.RequestUserPermission(Permission.Microphone, callbacks);
         }
@@ -369,7 +369,7 @@ namespace WIGO.Userinterface
             if (Application.HasUserAuthorization(UserAuthorization.Microphone))
             {
                 Debug.Log("Microphone found");
-                SetupNatDevice();
+                //SetupNatDevice();
             }
             else
             {

@@ -38,25 +38,25 @@ namespace WIGO.Userinterface
 
         public virtual void Setup(string path)
         {
-            if (!string.IsNullOrEmpty(path))
-            {
-                _videoPath = path;
-#if UNITY_EDITOR
-                var preview = _tempPreview;
-#elif UNITY_ANDROID || UNITY_IOS
-                var preview = NativeCamera.GetVideoThumbnail(path);
-#endif
-                float aspect = (float)preview.width / preview.height;
-                float previewHeight = _previewMask.rect.width / aspect;
-                float height = Mathf.Min(previewHeight, MAX_PREVIEW_HEIGHT);
-                _previewMask.sizeDelta = new Vector2(_previewMask.sizeDelta.x, height);
-                _preview.texture = preview;
-                _preview.rectTransform.sizeDelta = new Vector2(_preview.rectTransform.sizeDelta.x, previewHeight);
-            }
-
-            _descIF.SetTextWithoutNotify(string.Empty);
-            UIGameColors.SetTransparent(_sendButton, 0.4f);
-            _counterDescLabel.text = $"{_descIF.characterLimit}/{_descIF.characterLimit}";
+//             if (!string.IsNullOrEmpty(path))
+//             {
+//                 _videoPath = path;
+// #if UNITY_EDITOR
+//                 var preview = _tempPreview;
+// #elif UNITY_ANDROID //|| UNITY_IOS
+//                 // var preview = NativeCamera.GetVideoThumbnail(path);
+// #endif
+//                 float aspect = (float)preview.width / preview.height;
+//                 float previewHeight = _previewMask.rect.width / aspect;
+//                 float height = Mathf.Min(previewHeight, MAX_PREVIEW_HEIGHT);
+//                 _previewMask.sizeDelta = new Vector2(_previewMask.sizeDelta.x, height);
+//                 _preview.texture = preview;
+//                 _preview.rectTransform.sizeDelta = new Vector2(_preview.rectTransform.sizeDelta.x, previewHeight);
+//             }
+//
+//             _descIF.SetTextWithoutNotify(string.Empty);
+//             UIGameColors.SetTransparent(_sendButton, 0.4f);
+//             _counterDescLabel.text = $"{_descIF.characterLimit}/{_descIF.characterLimit}";
         }
 
         public void OnBackButtonClick()
