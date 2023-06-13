@@ -34,7 +34,7 @@ namespace MyTests.Keyboard
         private void Awake()
         {
 #if UNITY_ANDROID
-            TouchScreenKeyboard.Android.closeKeyboardOnOutsideTap = false;
+            TouchScreenKeyboard.Android.consumesOutsideTouches = false;
 #endif
             TouchScreenKeyboard.hideInput = true;
             _keyboardManager = new KeyboardManager(_canvas.rect.height);

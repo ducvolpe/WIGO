@@ -13,7 +13,7 @@ public class MobileInputTest : MonoBehaviour
 
     public void OnActivateIF(string text)
     {
-        TouchScreenKeyboard.Android.closeKeyboardOnOutsideTap = false;
+        TouchScreenKeyboard.Android.consumesOutsideTouches = false;
         _controlHeight = true;
         Debug.Log("Activated");
     }
@@ -38,7 +38,7 @@ public class MobileInputTest : MonoBehaviour
     {
         _fieldRect = _inputField.transform as RectTransform;
         _ratio = _canvas.sizeDelta.y / Screen.height;
-        TouchScreenKeyboard.Android.closeKeyboardOnOutsideTap = false;
+        TouchScreenKeyboard.Android.consumesOutsideTouches = false;
     }
 
     private void LateUpdate()

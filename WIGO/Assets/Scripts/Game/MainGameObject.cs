@@ -18,7 +18,7 @@ namespace WIGO
         {
             Application.targetFrameRate = 60;
 #if UNITY_ANDROID
-            TouchScreenKeyboard.Android.closeKeyboardOnOutsideTap = false;
+            TouchScreenKeyboard.Android.consumesOutsideTouches = false;
 #endif
             if (_clearSaveData)
             {
